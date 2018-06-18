@@ -56,7 +56,7 @@ $size = 'Standard_DS2_v2'
 # Stop and deallocate the VM before changing the size
 Stop-AzureRmVM -ResourceGroupName $rgName -Name $vmName -Force
 
-$vm = Get-AzureRmVM -Name $vmName -resourceGroupName $rgName
+
 
 # Change the VM size to a size that supports premium storage
 # Skip this step if converting storage from premium to standard
@@ -96,12 +96,12 @@ $size = 'Standard_DS2_v2'
 $disk = Get-AzureRmDisk -DiskName $diskName -ResourceGroupName $rgName
 
 # Get the ARM resource to get name and resource group of the VM
-$vmResource = Get-AzureRmResource -ResourceId $disk.diskId
+$vmResource = Get-AzureRmResource -ResourceId $disk.Id
+
+$vm = Get-AzureRmVM $vmResource.ResourceGroupName -Name $vmResource.ResourceName 
 
 # Stop and deallocate the VM before changing the storage type
 Stop-AzureRmVM -ResourceGroupName $vm.ResourceGroupName -Name $vm.Name -Force
-
-$vm = Get-AzureRmVM $vmResource.ResourceGroupName -Name $vmResource.ResourceName 
 
 # Change the VM size to a size that supports premium storage
 # Skip this step if converting storage from premium to standard
